@@ -56,11 +56,30 @@ public class Board {
         placePiece(blackPiece, SIDE - 1 - edgeOffset, column);
     }
 
-    private void placePiece(ChessPiece pieceType, int row, int column) {
-        board[row][column] = pieceType;
+    private void placePiece(ChessPiece piece, int row, int column) {
+        board[row][column] = piece;
     }
 
-    public ChessPiece getPieceAt(int row, int column) {
-        return board[row][column];
+    private void placePiece(ChessPiece piece, Position position) {
+        placePiece(piece, position.getRow(), position.getColumn());
+    }
+
+    public boolean hasPieceAt(Position position) {
+        return getPieceAt(position) != null;
+    }
+
+    public ChessPiece getPieceAt(Position position) {
+        return board[position.getRow()][position.getColumn()];
+    }
+
+    private ChessPiece removePiece(Position from) {
+        final ChessPiece piece = board[from.getRow()][from.getColumn()];
+        board[from.getRow()][from.getColumn()] = null;
+        return piece;
+    }
+
+    public void movePiece(Position from, Position to) {
+        ChessPiece piece = removePiece(from);
+        placePiece(piece, to);
     }
 }

@@ -3,6 +3,8 @@ package chess;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class BoardTest {
     @Test
@@ -27,6 +29,28 @@ public class BoardTest {
         assertPieceTypePlacement(board, PieceType.ROOK, 7);
     }
 
+    @Test
+    public void movePiece_beforeAndAfterPiecePlacement() throws Exception {
+        // given
+        final Board board = new Board();
+        final Position from = new Position(0, 0);
+        final Position to = new Position(3, 0);
+
+        final ChessPiece piece = board.getPieceAt(from);
+
+        // before
+        assertTrue(board.hasPieceAt(from));
+        assertFalse(board.hasPieceAt(to));
+
+        // when
+        board.movePiece(from, to);
+
+        // then
+        assertFalse(board.hasPieceAt(from));
+        assertTrue(board.hasPieceAt(to));
+        assertEquals(piece, board.getPieceAt(to));
+    }
+
     private void assertPieceTypePlacement(Board board, PieceType type, int column) {
         final ChessPiece whitePiece = ChessPiece.from(PieceColor.WHITE, type);
         final ChessPiece blackPiece = ChessPiece.from(PieceColor.BLACK, type);
@@ -38,7 +62,7 @@ public class BoardTest {
             edgeOffset = 0;
         }
 
-        assertEquals(whitePiece, board.getPieceAt(edgeOffset, column));
-        assertEquals(blackPiece, board.getPieceAt(7 - edgeOffset, column));
+        assertEquals(whitePiece, board.getPieceAt(new Position(edgeOffset, column)));
+        assertEquals(blackPiece, board.getPieceAt(new Position(7 - edgeOffset, column)));
     }
 }
